@@ -76,22 +76,9 @@ public class Connection extends Thread {
                         String nameClient = (String) recieveObject();
                         User user = new User(this.id, ip, nameClient);
                         serverController.getListUser().add(user);
-                        
+
                         serverController.getServerWindow().setColor(Color.GREEN);
                         serverController.getServerWindow().addToList("CLIENTE CONECTADO: ip(" + ip + ") [" + nameClient + "]");
-
-                        System.out.println("-----------------------------------------------------------------------------------------------------");
-                        System.out.println("");
-                        System.out.println("LISTA DE SUARIOSS");
-                        for (int i = 0; i < serverController.getListUser().size(); i++) {
-                            System.out.println(serverController.getListUser().get(i));
-                        }
-                        System.out.println("******************************************");
-                        
-                        break;
-
-                    case "MEFUI":
-                        System.out.println("EL CLIENTE PERSIO LA CONEXION");
                         break;
                 }
             } catch (IOException ex) {
@@ -99,8 +86,15 @@ public class Connection extends Thread {
                 this.active = false;
                 serverController.getServer().evaluateConnections();
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
+        }
+        try {
+            rx.close();
+            tx.close();
+            socket.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -111,7 +105,4 @@ public class Connection extends Thread {
     public int getIdOfConnection() {
         return id;
     }
-    
-    
-    
 }

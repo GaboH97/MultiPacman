@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 import models.Global;
 import sockets.Client;
@@ -33,7 +32,8 @@ public class ControllerFinal {
                     c.sendMessageObject(Global.ACTION_REGISTER);
                     c.sendMessageObject(c.getIp());
                     c.sendMessageObject(JOptionPane.showInputDialog("Ingrese su nombre"));
-                } catch (UnknownHostException ex) {
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
             break;

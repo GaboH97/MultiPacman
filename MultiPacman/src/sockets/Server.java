@@ -27,7 +27,7 @@ public class Server extends Thread {
             this.servercController = servercController;
             connections = new ArrayList<>();
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         start();
     }
@@ -35,7 +35,7 @@ public class Server extends Thread {
     public void evaluateConnections() {
         ArrayList<Connection> list = new ArrayList<>();
         for (int i = 0; i < connections.size(); i++) {
-            if(connections.get(i).isActive()){
+            if (connections.get(i).isActive()) {
                 list.add(connections.get(i));
             }
         }
@@ -53,7 +53,6 @@ public class Server extends Thread {
         messageInit();
         while (true) {
             evaluateConnections();
-            System.out.println("este es el tamaño de la lista de connecction despues de evaluar" + connections.size());
             if (connections.size() <= Global.CAPACITY_MAX) {
                 Socket socket = null;
                 try {
@@ -75,7 +74,4 @@ public class Server extends Thread {
         } catch (UnknownHostException ex) {
         }
     }
-    
-        
-
 }

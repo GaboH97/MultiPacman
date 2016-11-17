@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Global;
 
@@ -20,55 +18,34 @@ public class Client extends Thread{
     private Socket socket;
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    public String[] aux;
     private String ip;
     
-    public Client() {
-        try {
+    public Client() throws IOException {
             this.ip = JOptionPane.showInputDialog("input your ip address");
             socket= new Socket(ip, Global.DEFAULT_PORT);
             config();
             this.start();
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
-    public Client(String ip) {
-        try {
+    public Client(String ip) throws IOException {
             this.ip = ip;
             socket= new Socket(ip, Global.DEFAULT_PORT);
             config();
             this.start();
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
         
     
-    public void config(){
-        try {
+    public void config() throws IOException{
              output = new ObjectOutputStream(socket.getOutputStream());
              input = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
-    public void sendMessageObject(Object mensage){
-        try {
+    public void sendMessageObject(Object mensage) throws IOException{
             output.writeObject(mensage);
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
-    public void sendMensageObjectUnique(Object mensage){
-        try {
+    public void sendMensageObjectUnique(Object mensage) throws IOException{
             output.writeUnshared(mensage);
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public Object getMensagge() throws ClassNotFoundException, IOException {
