@@ -2,6 +2,7 @@ package sockets;
 
 import controller.ServerController;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -53,11 +54,19 @@ public class Server extends Thread {
         messageInit();
         while (true) {
             evaluateConnections();
+            Socket socket = null;
             if (connections.size() <= Global.CAPACITY_MAX) {
-                Socket socket = null;
                 try {
                     socket = serverSocket.accept();
                     connections.add(new Connection(socket, servercController));
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                ObjectOutputStream as;
+                try {
+                    as = new ObjectOutputStream(socket.getOutputStream());
+                    as.writeObject("ya se salio");
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }

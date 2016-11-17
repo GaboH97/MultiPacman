@@ -7,7 +7,7 @@ package models;
 public class Global {
 
     public static final int DEFAULT_PORT = 12345;
-    public static final int CAPACITY_MAX = 2;
+    public static final int CAPACITY_MAX = 1;
 
     public static final String ACTION_REGISTER = "register";
     public static final String DESCONECT = "desconect";
