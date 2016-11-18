@@ -8,8 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Objects;
 import models.Global;
 
 /**
@@ -19,13 +18,13 @@ import models.Global;
 public class Server extends Thread {
 
     private ServerSocket serverSocket;
-    private ServerController servercController;
+    private ServerController serverController;
     private ArrayList<Connection> connections;
 
-    public Server(ServerController servercController) {
+    public Server(ServerController serverController) {
         try {
             serverSocket = new ServerSocket(Global.DEFAULT_PORT);
-            this.servercController = servercController;
+            this.serverController = serverController;
             connections = new ArrayList<>();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -34,42 +33,57 @@ public class Server extends Thread {
     }
 
     public void evaluateConnections() {
-        ArrayList<Connection> list = new ArrayList<>();
         for (int i = 0; i < connections.size(); i++) {
-            if (connections.get(i).isActive()) {
-                list.add(connections.get(i));
+            if (!connections.get(i).isActive()) {
+                connections.remove(i);
             }
         }
-        this.connections = list;
-        servercController.evaluateListUser(connections);
-        servercController.getServerWindow().validateList(servercController.getListUser());
     }
 
     public ArrayList<Connection> getConnections() {
         return connections;
     }
 
+    public boolean isLoggedMoreTimesThanAvailable(String IP) { //NOMBRE DE MÉTODO TIPO CESAR :V
+        int counter = 0;
+        for (Connection connection : connections) {
+            if (counter == 4) {
+                return true;
+            } else if (Objects.equals(connection.getSocket().getRemoteSocketAddress().toString().replaceAll("/", ""), IP)) {
+                counter++;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         messageInit();
         while (true) {
-            evaluateConnections();
+            System.out.println("Size of connections " );
             Socket socket = null;
-            if (connections.size() <= Global.CAPACITY_MAX) {
-                try {
-                    socket = serverSocket.accept();
-                    connections.add(new Connection(socket, servercController));
-                } catch (IOException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                evaluateConnections();
+                socket = serverSocket.accept();
+
+                if (connections.size() < Global.CAPACITY_MAX && !isLoggedMoreTimesThanAvailable(socket.getRemoteSocketAddress().toString().replaceAll("/", ""))) {
+                    connections.add(new Connection(socket, serverController));
+                } else {
+                    /**
+                     * ENVIA MENSAJE DE QUE NO PUEDECONECTARSE , O QUE INTENTE
+                     * EN UN RATO Y LUEGO CIERRA LOS CANALES DE INFORMACIÒN
+                     */
+//                    socket.seendMessageDeQueNoLoPodemosAceptar()
+//                    socket.close();
+                    ObjectOutputStream ois = new ObjectOutputStream(socket.getOutputStream());
+                    ois.writeObject("Sorry");
+                    ois.writeUTF(Global.CONNECTION_FORBIDDEN_MESSAGE);
+
+                    // serverController.evaluateListUser(serverController.getServer().getConnections());
+                    //serverController.getServerWindow().validateList(serverController.getListUser());
                 }
-            }else{
-                ObjectOutputStream as;
-                try {
-                    as = new ObjectOutputStream(socket.getOutputStream());
-                    as.writeObject("ya se salio");
-                } catch (IOException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }

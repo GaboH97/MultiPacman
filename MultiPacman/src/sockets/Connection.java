@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import models.Global;
 
 /**
@@ -28,11 +26,11 @@ public class Connection extends Thread {
     private boolean active;
 
     public Connection(Socket socket, ServerController serverController) {
-        this.active = true;
         id = BASIC_ID++;
         this.socket = socket;
         this.serverController = serverController;
         configChannels(socket);
+        this.active = true;
         start();
     }
 
@@ -42,7 +40,7 @@ public class Connection extends Thread {
             tx.flush();
             rx = new ObjectInputStream(socket1.getInputStream());
         } catch (IOException ex) {
-            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -67,7 +65,7 @@ public class Connection extends Thread {
     public void run() {
         super.run();
         String action = "";
-        while (active) {
+        while (true) {
             try {
                 action = (String) recieveObject();
                 switch (action) {
@@ -76,25 +74,28 @@ public class Connection extends Thread {
                         String nameClient = (String) recieveObject();
                         User user = new User(this.id, ip, nameClient);
                         serverController.getListUser().add(user);
-
                         serverController.getServerWindow().setColor(Color.GREEN);
                         serverController.getServerWindow().addToList("CLIENTE CONECTADO: ip(" + ip + ") [" + nameClient + "]");
+
+                        System.out.println("-----------------------------------------------------------------------------------------------------");
+                        System.out.println("");
+                        break;
+
+                    case "MEFUI":
+                        System.out.println("EL CLIENTE PERSIO LA CONEXION");
                         break;
                 }
             } catch (IOException ex) {
                 System.out.println("CLIENTE DESCONECTADO");
                 this.active = false;
                 serverController.getServer().evaluateConnections();
+                serverController.evaluateListUser(serverController.getServer().getConnections());
+                serverController.getServerWindow().validateList(serverController.getListUser());
+
+                break;
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-        }
-        try {
-            rx.close();
-            tx.close();
-            socket.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 

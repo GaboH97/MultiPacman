@@ -48,4 +48,12 @@ public class ServerController {
     public ArrayList<User> getListUser() {
         return listUser;
     }
+
+    public static void main(String[] args) {
+        try {
+            new ServerController();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
