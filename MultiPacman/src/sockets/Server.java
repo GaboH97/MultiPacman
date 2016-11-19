@@ -47,10 +47,11 @@ public class Server extends Thread {
     public boolean isLoggedMoreTimesThanAvailable(String IP) { //NOMBRE DE MÉTODO TIPO CESAR :V
         int counter = 0;
         for (Connection connection : connections) {
-            if (counter == 4) {
-                return true;
-            } else if (Objects.equals(connection.getSocket().getRemoteSocketAddress().toString().replaceAll("/", ""), IP)) {
+            if (Objects.equals(connection.getSocket().getRemoteSocketAddress().toString().replaceAll("/", "").substring(0, IP.indexOf(":")), IP.substring(0, IP.indexOf(":")))) {
                 counter++;
+            }
+            if (counter >= Global.MAX_CONNECTIONS_PER_IP) {
+                return true;
             }
         }
         return false;
@@ -60,14 +61,15 @@ public class Server extends Thread {
     public void run() {
         messageInit();
         while (true) {
-            System.out.println("Size of connections " );
+            System.out.println("Size of connections before adding " + getConnections().size());
             Socket socket = null;
             try {
                 evaluateConnections();
                 socket = serverSocket.accept();
 
-                if (connections.size() < Global.CAPACITY_MAX && !isLoggedMoreTimesThanAvailable(socket.getRemoteSocketAddress().toString().replaceAll("/", ""))) {
+                if (connections.size() < Global.CAPACITY_MAX &&!isLoggedMoreTimesThanAvailable(socket.getRemoteSocketAddress().toString().replaceAll("/", ""))) {
                     connections.add(new Connection(socket, serverController));
+                    System.out.println("Size of connections after adding " + getConnections().size());
                 } else {
                     /**
                      * ENVIA MENSAJE DE QUE NO PUEDECONECTARSE , O QUE INTENTE
