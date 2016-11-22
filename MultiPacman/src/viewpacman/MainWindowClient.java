@@ -25,7 +25,8 @@ public class MainWindowClient extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.controllerClient = controllerClient;
         this.setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(600, 600));
+        setSize(600, 600);
+
         panelBoard = new PanelBoard(controllerClient);
         panelBoard.setFocusable(true);
         panelBoard.requestFocusInWindow();

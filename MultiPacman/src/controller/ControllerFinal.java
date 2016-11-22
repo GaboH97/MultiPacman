@@ -21,6 +21,7 @@ public class ControllerFinal {
         switch (option) {
             case Global.START_AS_A_SERVER_COMMAND: {
                 try {
+                    System.out.println("rth¿¿ooioasd");
                     new ServerController();
                 } catch (IOException ex) {
                     ex.printStackTrace();

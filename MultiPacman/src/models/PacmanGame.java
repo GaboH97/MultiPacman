@@ -92,7 +92,7 @@ public class PacmanGame {
 
     public void move(Pacman pacman) {
         if (!mainWindowClient.getPanelBoard().colission(pacman, mainWindowClient.getPanelBoard().getCookie())) {
-            if (pacman.getDirection() == 1 /*&& pacman.getCoordinate().x + (Global.PACMAN_RADIUS * 2) <= Global.WIDTH**/) {
+            if (pacman.getDirection() == 1 && pacman.getCoordinate().x + (Global.PACMAN_RADIUS * 2) <= Global.WIDTH) {
                 pacman.setCoordinate(new Point(pacman.getCoordinate().x + 5, pacman.getCoordinate().y));
             }
             if (pacman.getDirection() == 2 && pacman.getCoordinate().x >= 0) {
