@@ -22,10 +22,11 @@ public class MainWindowClient extends JFrame {
 
     public MainWindowClient(ControllerClient controllerClient) {
 //        this.setLocationRelativeTo(null);
+        setSize(600, 600);
+        setPreferredSize(new Dimension(1000, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.controllerClient = controllerClient;
         this.setLayout(new BorderLayout());
-        setSize(600, 600);
 
         panelBoard = new PanelBoard(controllerClient);
         panelBoard.setFocusable(true);
