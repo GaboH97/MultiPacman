@@ -1,11 +1,13 @@
-package models;
+package models.entity;
+
+import java.io.Serializable;
 
 /**
  *
- * @author Andres Torres & Cesar Cardozo & Gabriel Amaya & Megan Ibage & Lina
- * Melo
+ * @author Andres Torres & Cesar Cardozo & Gabriel Amaya & Megan Ibage 
+ * & Lina Melo
  */
-public class User {
+public class User implements Serializable{
 
     private String name;
     private String ip;

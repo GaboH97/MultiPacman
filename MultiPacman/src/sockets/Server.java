@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
-import models.Global;
+import models.entity.Global;
 
 /**
  *
@@ -50,7 +50,7 @@ public class Server extends Thread {
             if (Objects.equals(connection.getSocket().getRemoteSocketAddress().toString().replaceAll("/", "").substring(0, IP.indexOf(":")), IP.substring(0, IP.indexOf(":")))) {
                 counter++;
             }
-            if (counter >= Global.MAX_CONNECTIONS_PER_IP) {
+            if (counter >= 10) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ public class Server extends Thread {
                 evaluateConnections();
                 socket = serverSocket.accept();
 
-                if (connections.size() < Global.CAPACITY_MAX &&!isLoggedMoreTimesThanAvailable(socket.getRemoteSocketAddress().toString().replaceAll("/", ""))) {
+                if (/*connections.size() < Global.CAPACITY_MAX &&*/!isLoggedMoreTimesThanAvailable(socket.getRemoteSocketAddress().toString().replaceAll("/", ""))) {
                     connections.add(new Connection(socket, serverController));
                     System.out.println("Size of connections after adding " + getConnections().size());
                 } else {

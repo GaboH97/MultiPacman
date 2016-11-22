@@ -3,8 +3,10 @@ package controller;
 import view.ServerWindow;
 import java.io.IOException;
 import java.util.ArrayList;
+import models.entity.Pacman;
+import models.entity.Global;
 import sockets.Server;
-import models.User;
+import models.entity.User;
 import sockets.Connection;
 
 /**
@@ -17,6 +19,7 @@ public class ServerController {
     private ServerWindow serverWindow;
     private Server server;
     private ArrayList<User> listUser;
+    private int idRemove;
 
     public ServerController() throws IOException {
         this.listUser = new ArrayList<>();
@@ -37,6 +40,34 @@ public class ServerController {
         this.listUser = listAux;
     }
 
+    public void sendObtain() throws IOException {
+        for (int i = 0; i < server.getConnections().size(); i++) {
+            server.getConnections().get(i).sendMessage(Global.OBTAIN_COMMAND);
+        }
+    }
+
+    public void sendClient() throws IOException {
+        for (int i = 0; i < server.getConnections().size(); i++) {
+            server.getConnections().get(i).sendMessage(Global.SEND_MESSAGE_LIST_COMMAND);
+            server.getConnections().get(i).sendMenssage(listUser);
+            server.getConnections().get(i).sendMessage(server.getConnections().get(i).getIdOfConnection());
+        }
+    }
+
+    public void sendRemove() throws IOException {
+        for (int i = 0; i < server.getConnections().size(); i++) {
+            server.getConnections().get(i).sendMessage(Global.REMOVE_COMMAND);
+            server.getConnections().get(i).sendMenssage(idRemove);
+        }
+    }
+
+    public void sendClientPacmans(ArrayList<Pacman> list) throws IOException {
+        for (int i = 0; i < server.getConnections().size(); i++) {
+            server.getConnections().get(i).sendMessage(Global.LISTPACMAN_COMMAND);
+            server.getConnections().get(i).sendMenssage(list);
+        }
+    }
+
     public Server getServer() {
         return server;
     }
@@ -47,6 +78,11 @@ public class ServerController {
 
     public ArrayList<User> getListUser() {
         return listUser;
+    }
+
+    public void setIdRemove(int idRemove) {
+        this.idRemove = idRemove;
+        System.out.println(idRemove + "ID RE");
     }
 
     public static void main(String[] args) {

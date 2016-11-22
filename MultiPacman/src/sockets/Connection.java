@@ -1,6 +1,6 @@
 package sockets;
 
-import models.User;
+import models.entity.User;
 import controller.ServerController;
 import java.awt.Color;
 import java.io.IOException;
@@ -8,7 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import models.Global;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import models.entity.Pacman;
+import models.entity.Global;
 
 /**
  *
@@ -23,14 +27,14 @@ public class Connection extends Thread {
     private ObjectOutputStream tx;
     private ObjectInputStream rx;
     private ServerController serverController;
-    private boolean active;
+    private boolean isActive;
 
     public Connection(Socket socket, ServerController serverController) {
         id = BASIC_ID++;
         this.socket = socket;
         this.serverController = serverController;
         configChannels(socket);
-        this.active = true;
+        isActive = true;
         start();
     }
 
@@ -56,6 +60,14 @@ public class Connection extends Thread {
         tx.writeObject(output);
     }
 
+    public void sendMenssage(Object output) {
+        try {
+            tx.writeUnshared(output);
+        } catch (IOException ex) {
+            System.out.println("LA ENVIADA DE LA LISTA ME EXPLOTAx1");
+        }
+    }
+
     @Override
     public String toString() {
         return "Connection{" + "socket ip=" + (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/", "") + '}';
@@ -65,7 +77,7 @@ public class Connection extends Thread {
     public void run() {
         super.run();
         String action = "";
-        while (true) {
+        while (isActive) {
             try {
                 action = (String) recieveObject();
                 switch (action) {
@@ -76,23 +88,47 @@ public class Connection extends Thread {
                         serverController.getListUser().add(user);
                         serverController.getServerWindow().setColor(Color.GREEN);
                         serverController.getServerWindow().addToList("CLIENTE CONECTADO: ip(" + ip + ") [" + nameClient + "]");
-
+                        System.err.println(serverController.getListUser().toString());
+                        serverController.sendObtain();
                         System.out.println("-----------------------------------------------------------------------------------------------------");
                         System.out.println("");
                         break;
 
                     case "MEFUI":
-                        System.out.println("EL CLIENTE PERSIO LA CONEXION");
+                        System.out.println("EL CLIENTE PERDIO LA CONEXION");
+                        break;
+
+                    case "PACMANBEFORE":
+                        System.out.println("AQUI LLEGA PACMANBEFORE");
+                        ArrayList<Pacman> list = (ArrayList<Pacman>) recieveObject();
+                        serverController.sendClientPacmans(list);
+                        System.err.println(list.toString());
+                        break;
+                    case "PACMANAFTER":
+                        System.out.println("AQUI LLEGA PACMANAFTER");
+                        serverController.sendClient();
+                        break;
+                    case "PACMAN":
+                        System.out.println("AQUI LLEGA PACMAN");
+                        ArrayList<Pacman> listAux = (ArrayList<Pacman>) recieveObject();
+                        serverController.sendClientPacmans(listAux);
+                        System.err.println(listAux.toString());
                         break;
                 }
             } catch (IOException ex) {
-                System.out.println("CLIENTE DESCONECTADO");
-                this.active = false;
-                serverController.getServer().evaluateConnections();
-                serverController.evaluateListUser(serverController.getServer().getConnections());
-                serverController.getServerWindow().validateList(serverController.getListUser());
-
-                break;
+                try {
+                    serverController.setIdRemove(id);
+                    System.out.println("CLIENTE DESCONECTADO");
+                    serverController.getServer().evaluateConnections();
+                    serverController.evaluateListUser(serverController.getServer().getConnections());
+                    serverController.getServerWindow().validateList(serverController.getListUser());
+                    serverController.sendRemove();
+                    //serverController.sendClient();
+                    System.err.println(serverController.getListUser().toString());
+                    isActive = false;
+                } catch (IOException ex1) {
+                    Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -100,7 +136,7 @@ public class Connection extends Thread {
     }
 
     public boolean isActive() {
-        return active;
+        return isActive;
     }
 
     public int getIdOfConnection() {

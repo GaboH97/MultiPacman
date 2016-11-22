@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import sockets.Connection;
-import models.User;
+import models.entity.User;
 
 /**
  *
