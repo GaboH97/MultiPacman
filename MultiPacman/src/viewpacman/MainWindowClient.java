@@ -8,6 +8,7 @@ package viewpacman;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import controller.ControllerClient;
+import java.awt.Dimension;
 
 /**
  *
@@ -15,32 +16,30 @@ import controller.ControllerClient;
  */
 public class MainWindowClient extends JFrame {
 
-    public PanelGame1 panelsito;
-    public PanelTable panel;
-    private ControllerClient c;
+    public PanelBoard panelBoard;
+    public PanelTable panelTable;
+    private ControllerClient controllerClient;
 
-    public MainWindowClient(ControllerClient c) {
+    public MainWindowClient(ControllerClient controllerClient) {
 //        this.setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(1200, 600);
-        this.c = c;
-        this.setLayout(null);
-        panelsito = new PanelGame1(c);
-        panelsito.setFocusable(true);
-        panelsito.requestFocusInWindow();
-        panel = new PanelTable(this, c);
+        this.controllerClient = controllerClient;
+        this.setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(600, 600));
+        panelBoard = new PanelBoard(controllerClient);
+        panelBoard.setFocusable(true);
+        panelBoard.requestFocusInWindow();
+        panelTable = new PanelTable(this, controllerClient);
 //        panel.setBackground(Color.BLACK);
-        panelsito.setBounds(0, 0, 965, 560);
-        panel.setBounds(825, 0, 500, 900);
-        this.add(panelsito, BorderLayout.WEST);
-        this.add(panel, BorderLayout.EAST);
-        this.addKeyListener(c);
+        this.add(panelBoard, BorderLayout.CENTER);
+        this.add(panelTable, BorderLayout.EAST);
+        this.addKeyListener(controllerClient);
         threadRepaint(this);
 //        createTable();
     }
 
-    public PanelGame1 getPanelsito() {
-        return panelsito;
+    public PanelBoard getPanelBoard() {
+        return panelBoard;
     }
 
     public void threadRepaint(MainWindowClient frameGame) {
@@ -56,12 +55,12 @@ public class MainWindowClient extends JFrame {
         t.start();
     }
 
-    public PanelTable getPanel() {
-        return panel;
+    public PanelTable getPanelTable() {
+        return panelTable;
     }
 
-    public void setPanel(PanelTable panel) {
-        this.panel = panel;
+    public void setPanelTable0(PanelTable panelTable) {
+        this.panelTable = this.panelTable;
     }
 
 }

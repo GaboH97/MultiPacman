@@ -12,6 +12,7 @@ public class Global {
     public static final int CAPACITY_MAX = 5;
     public final static int WIDTH = 600;
     public final static int HEIGTH = 400;
+    public static final int PACMAN_RADIUS = 15;
 
     //commands ------------------
     public static final String START_AS_A_CLIENT_COMMAND = "Start as a client";

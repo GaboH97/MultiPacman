@@ -19,7 +19,7 @@ import models.entity.Pacman;
  *
  * @author USUARIO
  */
-public class PanelGame1 extends javax.swing.JPanel {
+public class PanelBoard extends javax.swing.JPanel {
 
     /**
      * Creates new form PanelGame1
@@ -29,10 +29,10 @@ public class PanelGame1 extends javax.swing.JPanel {
     private ControllerClient controllerClient;
     private Cookie cookie;
 
-    public PanelGame1(ControllerClient controllerClient) {
+    public PanelBoard(ControllerClient controllerClient) {
         this.controllerClient = controllerClient;
         this.setBackground(Color.GRAY);
-        setSize(Global.WIDTH, Global.HEIGTH);
+        setPreferredSize(new Dimension(Global.WIDTH, Global.HEIGTH));
         initComponents();
         angle = 45;
         listPacmans = new ArrayList<>();
@@ -130,11 +130,11 @@ public class PanelGame1 extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

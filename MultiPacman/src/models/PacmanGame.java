@@ -45,8 +45,8 @@ public class PacmanGame {
             }
         }
     }
-    
-      public void generateOnePacman(int id, ArrayList<User> list) {
+
+    public void generateOnePacman(int id, ArrayList<User> list) {
         this.pacmanMe = id;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getId() == id) {
@@ -64,7 +64,7 @@ public class PacmanGame {
     public void testPacmans() {
 //        cookie = new Cookie(new Point(randomCoordenateX(), randomCoordenateY()));
 //        moved();
-        mainWindowClient.getPanel().pload(listPacman);
+        mainWindowClient.getPanelTable().pload(listPacman);
     }
 
     public boolean validatePacman(int id) {
@@ -75,8 +75,6 @@ public class PacmanGame {
         }
         return false;
     }
-
-   
 
     public void updateListPacmans(ArrayList<User> list) {
         this.listClients = list;
@@ -93,24 +91,24 @@ public class PacmanGame {
     }
 
     public void move(Pacman pacman) {
-        if (!mainWindowClient.getPanelsito().colission(pacman, mainWindowClient.getPanelsito().getCookie())) {
-            if (pacman.getDirection() == 1) {
+        if (!mainWindowClient.getPanelBoard().colission(pacman, mainWindowClient.getPanelBoard().getCookie())) {
+            if (pacman.getDirection() == 1 /*&& pacman.getCoordinate().x + (Global.PACMAN_RADIUS * 2) <= Global.WIDTH**/) {
                 pacman.setCoordinate(new Point(pacman.getCoordinate().x + 5, pacman.getCoordinate().y));
             }
-            if (pacman.getDirection() == 2) {
+            if (pacman.getDirection() == 2 && pacman.getCoordinate().x >= 0) {
                 pacman.setCoordinate(new Point(pacman.getCoordinate().x - 5, pacman.getCoordinate().y));
             }
-            if (pacman.getDirection() == 3) {
+            if (pacman.getDirection() == 3 && pacman.getCoordinate().y + (Global.PACMAN_RADIUS * 2) <= Global.HEIGTH) {
                 pacman.setCoordinate(new Point(pacman.getCoordinate().x, pacman.getCoordinate().y + 5));
             }
-            if (pacman.getDirection() == 4) {
+            if (pacman.getDirection() == 4 && pacman.getCoordinate().y >= 0) {
                 pacman.setCoordinate(new Point(pacman.getCoordinate().x, pacman.getCoordinate().y - 5));
             }
         } else {
-            mainWindowClient.getPanelsito().getCookie().setPosition(new Point(Global.randomCoordenateX(), Global.randomCoordenateY()));
+            mainWindowClient.getPanelBoard().getCookie().setPosition(new Point(Global.randomCoordenateX(), Global.randomCoordenateY()));
             pacman.setScore(pacman.getScore() + 1);
-            mainWindowClient.getPanel().deleteRows();
-            mainWindowClient.getPanel().pload(listPacman);
+            mainWindowClient.getPanelTable().deleteRows();
+            mainWindowClient.getPanelTable().pload(listPacman);
         }
     }
 
@@ -122,7 +120,7 @@ public class PacmanGame {
                     try {
 //                        System.out.println("hola");
                         move(pacman);
-                        Thread.sleep(500);
+                        Thread.sleep(5);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(PacmanGame.class.getName()).log(Level.SEVERE, null, ex);
                     }

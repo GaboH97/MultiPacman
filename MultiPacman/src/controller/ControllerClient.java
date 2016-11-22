@@ -24,13 +24,13 @@ public class ControllerClient implements KeyListener {
 
     public void drawAndRefresh(ArrayList<User> list) {
         pacmanGame.reciveUsers(list);
-        mainWindowClient.getPanelsito().setListPacmans(pacmanGame.getListPacman());
+        mainWindowClient.getPanelBoard().setListPacmans(pacmanGame.getListPacman());
         mainWindowClient.repaint();
         mainWindowClient.setVisible(true);
     }
 
     public void refresh() {
-        mainWindowClient.getPanelsito().setListPacmans(pacmanGame.getListPacman());
+        mainWindowClient.getPanelBoard().setListPacmans(pacmanGame.getListPacman());
         mainWindowClient.repaint();
         mainWindowClient.setVisible(true);
     }

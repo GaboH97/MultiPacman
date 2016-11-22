@@ -99,7 +99,7 @@ public class Client extends Thread {
                     System.out.println("LLEGO LA LISTA!");
                     ArrayList<User> list = new ArrayList<>();
                     try {
-                        //System.out.println("this is the response " + getMensagge().toString());
+                        
                         list = (ArrayList<User>) getMensagge();
                         int idAux = (int) getMensagge();
                         controllerClient.getAdmin().generateOnePacman(idAux, list);
@@ -108,7 +108,7 @@ public class Client extends Thread {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
-                        System.out.println("VALI POSHA");
+                       
                     }
                 } else if (op.equals("LISTPACMAN")) {
                     ArrayList<Pacman> listAux = new ArrayList<>();
